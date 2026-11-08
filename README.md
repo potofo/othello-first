@@ -5,6 +5,8 @@ English | [日本語](README.ja-JP.md)
 A single-file, browser-based Reversi (Othello-style) game where you play against the computer on an 8×8 board.
 No build step, no dependencies — just open `othello.html` in a browser.
 
+<img src="images/screen-shot.png" alt="Screenshot of the game in English: an 8×8 board mid-game with the score, settings, and move log in the side panel" width="800">
+
 ## Features
 
 - Play as **Black (first)** or **White (second)**
@@ -16,6 +18,7 @@ No build step, no dependencies — just open `othello.html` in a browser.
 - Live score display and move log (algebraic notation `a1`–`h8`, including passes)
 - Automatic pass handling and game-over detection
 - Responsive layout (side panel on wide screens, stacked on mobile)
+- English / Japanese UI, switchable from the header (defaults to the browser language and remembers your choice)
 - Light / dark theme following the OS setting
 - Keyboard accessible, with screen-reader labels and `prefers-reduced-motion` support
 
@@ -42,7 +45,7 @@ Then open <http://localhost:8000/othello.html>.
 3. All opponent discs sandwiched between your new disc and your existing discs are flipped.
 4. If a player has no legal move, they pass. The game ends when neither player can move; the player with more discs wins.
 
-Click **新しく対局する (New Game)** to restart at any time. Changing your color also starts a new game; changing the difficulty takes effect from the next computer move.
+Click **New game** to restart at any time. Changing your color also starts a new game; changing the difficulty takes effect from the next computer move.
 
 ## How the AI Works
 
@@ -57,7 +60,8 @@ Click **新しく対局する (New Game)** to restart at any time. Changing your
 ├── othello.html       # The game (HTML + CSS + JavaScript in one file)
 ├── README.md          # This file (English)
 ├── README.ja-JP.md    # README (Japanese)
-└── LICENSE.txt        # MIT License
+├── LICENSE.txt        # MIT License
+└── images/            # Screenshots for the READMEs
 ```
 
 ## License
