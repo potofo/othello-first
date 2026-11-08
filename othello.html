@@ -43,7 +43,9 @@ body {
 @media (max-width: 760px) { .wrap { grid-template-columns: minmax(0, 1fr); } }
 h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0; letter-spacing: .02em; text-wrap: balance; }
 .sub { color: var(--muted); margin: 4px 0 0; font-size: .95rem; }
-header { grid-column: 1 / -1; }
+header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px 20px; flex-wrap: wrap; }
+.seg.lang { grid-template-columns: repeat(2, auto); flex: none; }
+.seg.lang button { padding: 6px 14px; font-size: .85rem; }
 
 .board-frame {
   background: var(--felt-dark); padding: clamp(10px, 2.5vw, 22px); border-radius: 14px;
@@ -102,8 +104,14 @@ aside { display: grid; gap: 16px; min-width: 0; }
 
 <div class="wrap">
   <header>
-    <h1>盤上の八列 リバーシ</h1>
-    <p class="sub">コンピュータと対戦する 8×8 のリバーシです。打てるマスに小さな点が表示されます。</p>
+    <div>
+      <h1 data-i18n="title">盤上の八列 リバーシ</h1>
+      <p class="sub" data-i18n="sub">コンピュータと対戦する 8×8 のリバーシです。打てるマスに小さな点が表示されます。</p>
+    </div>
+    <div class="seg lang" id="langSeg" role="group" aria-label="Language / 言語">
+      <button data-lang="ja" lang="ja" aria-pressed="true">日本語</button>
+      <button data-lang="en" lang="en" aria-pressed="false">English</button>
+    </div>
   </header>
 
   <main>
@@ -126,25 +134,25 @@ aside { display: grid; gap: 16px; min-width: 0; }
 
     <div class="card">
       <div class="row">
-        <span class="label">あなたの石</span>
+        <span class="label" data-i18n="yourColor">あなたの石</span>
         <div class="seg two" id="sideSeg">
-          <button id="sideB" data-v="1" aria-pressed="true">黒（先手）</button>
-          <button id="sideW" data-v="-1" aria-pressed="false">白（後手）</button>
+          <button id="sideB" data-v="1" aria-pressed="true" data-i18n="sideB">黒（先手）</button>
+          <button id="sideW" data-v="-1" aria-pressed="false" data-i18n="sideW">白（後手）</button>
         </div>
       </div>
       <div class="row">
-        <span class="label">強さ</span>
+        <span class="label" data-i18n="level">強さ</span>
         <div class="seg" id="levelSeg">
-          <button id="lv1" data-v="1" aria-pressed="false">よわい</button>
-          <button id="lv2" data-v="2" aria-pressed="true">ふつう</button>
-          <button id="lv3" data-v="3" aria-pressed="false">つよい</button>
+          <button id="lv1" data-v="1" aria-pressed="false" data-i18n="lv1">よわい</button>
+          <button id="lv2" data-v="2" aria-pressed="true" data-i18n="lv2">ふつう</button>
+          <button id="lv3" data-v="3" aria-pressed="false" data-i18n="lv3">つよい</button>
         </div>
       </div>
-      <button class="btn" id="newGame">新しく対局する</button>
+      <button class="btn" id="newGame" data-i18n="newGame">新しく対局する</button>
     </div>
 
     <div class="card">
-      <span class="label">棋譜</span>
+      <span class="label" data-i18n="moves">棋譜</span>
       <div class="log" id="log"></div>
     </div>
   </aside>
@@ -166,6 +174,61 @@ aside { display: grid; gap: 16px; min-width: 0; }
   ];
   const COLS = "abcdefgh";
   const name = p => COLS[p & 7] + ((p >> 3) + 1);
+
+  // ---- 言語 ----
+  const I18N = {
+    ja: {
+      title: "盤上の八列 リバーシ",
+      sub: "コンピュータと対戦する 8×8 のリバーシです。打てるマスに小さな点が表示されます。",
+      board: "リバーシの盤面",
+      yourColor: "あなたの石", sideB: "黒（先手）", sideW: "白（後手）",
+      level: "強さ", lv1: "よわい", lv2: "ふつう", lv3: "つよい",
+      newGame: "新しく対局する", moves: "棋譜", noMoves: "まだ手はありません",
+      black: "黒", white: "白", you: "あなた", cpu: "コンピュータ", legal: "打てます",
+      pass: "パス", discs: n => `${n}枚`,
+      yourTurnFirst: "あなたの番です。黒から始めます。",
+      yourTurn: "あなたの番です。",
+      thinking: "コンピュータが考えています…",
+      passYou: "あなたは打てるマスがないのでパスです。",
+      passCpu: "コンピュータは打てるマスがないのでパスです。",
+      win: (h, c) => `あなたの勝ちです（${h} 対 ${c}）`,
+      lose: (h, c) => `コンピュータの勝ちです（${c} 対 ${h}）`,
+      draw: (h, c) => `引き分けです（${h} 対 ${c}）`,
+    },
+    en: {
+      title: "Banjō no Hachiretsu Reversi",
+      sub: "An 8×8 Reversi game against the computer. Small dots mark the squares where you can play.",
+      board: "Reversi board",
+      yourColor: "Your color", sideB: "Black (first)", sideW: "White (second)",
+      level: "Difficulty", lv1: "Easy", lv2: "Normal", lv3: "Hard",
+      newGame: "New game", moves: "Moves", noMoves: "No moves yet",
+      black: "Black", white: "White", you: "You", cpu: "Computer", legal: "legal move",
+      pass: "pass", discs: n => `${n} ${n === 1 ? "disc" : "discs"}`,
+      yourTurnFirst: "Your turn. Black moves first.",
+      yourTurn: "Your turn.",
+      thinking: "The computer is thinking…",
+      passYou: "You have no legal moves, so you pass.",
+      passCpu: "The computer has no legal moves, so it passes.",
+      win: (h, c) => `You win (${h}–${c})`,
+      lose: (h, c) => `The computer wins (${c}–${h})`,
+      draw: (h, c) => `Draw (${h}–${c})`,
+    },
+  };
+  const LANG_KEY = "reversi-lang";
+  let lang = (() => {
+    try { const v = localStorage.getItem(LANG_KEY); if (v in I18N) return v; } catch {}
+    return /^ja\b/i.test(navigator.language || "") ? "ja" : "en";
+  })();
+  const t = (k, ...a) => { const v = I18N[lang][k]; return typeof v === "function" ? v(...a) : v; };
+  // S.msg は { k: キー, a: 引数 } で保持し、表示時に現在の言語で組み立てる
+  const msgText = m => !m ? "" : typeof m === "string" ? m : t(m.k, ...(m.a || []));
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.title = t("title");
+    for (const el of document.querySelectorAll("[data-i18n]")) el.textContent = t(el.dataset.i18n);
+    document.getElementById("board").setAttribute("aria-label", t("board"));
+    for (const btn of document.querySelectorAll("#langSeg button")) btn.setAttribute("aria-pressed", String(btn.dataset.lang === lang));
+  }
 
   // ---- ルール ----
   function flipsFor(b, p, c) {
@@ -237,7 +300,7 @@ aside { display: grid; gap: 16px; min-width: 0; }
   function fresh(human, level) {
     const b = Array(64).fill(0);
     b[27] = WHITE; b[36] = WHITE; b[28] = BLACK; b[35] = BLACK;
-    return { board: b, turn: BLACK, human, level, last: -1, log: [], over: false, msg: "" };
+    return { board: b, turn: BLACK, human, level, last: -1, log: [], over: false, msg: null };
   }
 
   // ---- 描画 ----
@@ -260,7 +323,7 @@ aside { display: grid; gap: 16px; min-width: 0; }
       const el = cells[p];
       el.className = "cell" + (legal.has(p) ? " legal" : "") + (p === S.last ? " last" : "");
       const v = b[p];
-      const label = name(p) + (v === BLACK ? " 黒" : v === WHITE ? " 白" : legal.has(p) ? " 打てます" : "");
+      const label = name(p) + (v === BLACK ? " " + t("black") : v === WHITE ? " " + t("white") : legal.has(p) ? " " + t("legal") : "");
       el.setAttribute("aria-label", label);
       if (!v) { el.innerHTML = ""; continue; }
       let d = el.firstChild;
@@ -269,18 +332,21 @@ aside { display: grid; gap: 16px; min-width: 0; }
     }
     document.getElementById("nB").textContent = count(b, BLACK);
     document.getElementById("nW").textContent = count(b, WHITE);
-    document.getElementById("whoB").textContent = "黒 · " + (S.human === BLACK ? "あなた" : "コンピュータ");
-    document.getElementById("whoW").textContent = "白 · " + (S.human === WHITE ? "あなた" : "コンピュータ");
+    document.getElementById("whoB").textContent = t("black") + " · " + t(S.human === BLACK ? "you" : "cpu");
+    document.getElementById("whoW").textContent = t("white") + " · " + t(S.human === WHITE ? "you" : "cpu");
     document.getElementById("scoreB").classList.toggle("turn", !S.over && S.turn === BLACK);
     document.getElementById("scoreW").classList.toggle("turn", !S.over && S.turn === WHITE);
-    document.getElementById("status").textContent = S.msg;
+    document.getElementById("status").textContent = msgText(S.msg);
     for (const btn of document.querySelectorAll("#sideSeg button")) btn.setAttribute("aria-pressed", String(+btn.dataset.v === S.human));
     for (const btn of document.querySelectorAll("#levelSeg button")) btn.setAttribute("aria-pressed", String(+btn.dataset.v === S.level));
     const log = document.getElementById("log");
-    if (!S.log.length) log.innerHTML = `<span class="empty" style="grid-column:1/-1">まだ手はありません</span>`;
+    if (!S.log.length) log.innerHTML = `<span class="empty" style="grid-column:1/-1">${t("noMoves")}</span>`;
     else {
       let html = "";
-      S.log.forEach((e, i) => { html += `<span>${i+1}.</span><span class="mv">${e.c === BLACK ? "●" : "○"} ${e.m}</span><span>${e.n}枚</span>`; });
+      S.log.forEach((e, i) => {
+        const isPass = e.m === "pass";
+        html += `<span>${i+1}.</span><span class="mv">${e.c === BLACK ? "●" : "○"} ${isPass ? t("pass") : e.m}</span><span>${isPass ? "" : t("discs", e.n)}</span>`;
+      });
       log.innerHTML = html; log.scrollTop = log.scrollHeight;
     }
   }
@@ -295,16 +361,16 @@ aside { display: grid; gap: 16px; min-width: 0; }
   }
   function advance(changed) {
     const next = -S.turn;
-    if (legalMoves(S.board, next).length) { S.turn = next; S.msg = ""; }
+    if (legalMoves(S.board, next).length) { S.turn = next; S.msg = null; }
     else if (legalMoves(S.board, S.turn).length) {
-      S.msg = (next === S.human ? "あなた" : "コンピュータ") + "は打てるマスがないのでパスです。";
+      S.msg = { k: next === S.human ? "passYou" : "passCpu" };
       S.log.push({ c: next, m: "pass", n: 0 });
     } else {
       S.over = true;
       const h = count(S.board, S.human), cpu = count(S.board, -S.human);
-      S.msg = h > cpu ? `あなたの勝ちです（${h} 対 ${cpu}）` : h < cpu ? `コンピュータの勝ちです（${cpu} 対 ${h}）` : `引き分けです（${h} 対 ${cpu}）`;
+      S.msg = { k: h > cpu ? "win" : h < cpu ? "lose" : "draw", a: [h, cpu] };
     }
-    if (!S.over && S.turn === S.human && !S.msg) S.msg = "あなたの番です。";
+    if (!S.over && S.turn === S.human && !S.msg) S.msg = { k: "yourTurn" };
     render(changed);
     scheduleCpu();
   }
@@ -312,8 +378,8 @@ aside { display: grid; gap: 16px; min-width: 0; }
   function scheduleCpu() {
     clearTimeout(cpuTimer);
     if (S.over || S.turn === S.human) return;
-    if (!S.msg) S.msg = "コンピュータが考えています…";
-    document.getElementById("status").textContent = S.msg;
+    if (!S.msg) S.msg = { k: "thinking" };
+    document.getElementById("status").textContent = msgText(S.msg);
     const g = gen;
     cpuTimer = setTimeout(() => {
       if (g !== gen) return;
@@ -331,7 +397,7 @@ aside { display: grid; gap: 16px; min-width: 0; }
   function newGame(human, level) {
     gen++; clearTimeout(cpuTimer);
     S = fresh(human, level);
-    S.msg = human === BLACK ? "あなたの番です。黒から始めます。" : "";
+    S.msg = human === BLACK ? { k: "yourTurnFirst" } : null;
     render();
     scheduleCpu();
   }
@@ -341,12 +407,20 @@ aside { display: grid; gap: 16px; min-width: 0; }
     btn.addEventListener("click", () => newGame(+btn.dataset.v, S.level));
   for (const btn of document.querySelectorAll("#levelSeg button"))
     btn.addEventListener("click", () => { S.level = +btn.dataset.v; render(); });
+  for (const btn of document.querySelectorAll("#langSeg button"))
+    btn.addEventListener("click", () => {
+      lang = btn.dataset.lang;
+      try { localStorage.setItem(LANG_KEY, lang); } catch {}
+      applyLang(); render();
+    });
 
   function start(data) {
+    if (data && data.lang in I18N) lang = data.lang;
+    applyLang();
     if (data && data.S && Array.isArray(data.S.board)) { S = data.S; render(); scheduleCpu(); }
     else newGame(BLACK, 2);
   }
-  window.claude?.hot?.snapshot?.(() => ({ S }));
+  window.claude?.hot?.snapshot?.(() => ({ S, lang }));
   window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 })();
 </script>
